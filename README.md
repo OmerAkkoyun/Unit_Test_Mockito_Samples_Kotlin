@@ -24,6 +24,9 @@ Mockito kullanarak birim testleri yazmak için aşağıdaki adımları izleyebil
 2. **Test Sınıfını Oluşturun**: Test edilecek sınıf için bir test sınıfı oluşturun..
    ```groovy
    class UserViewModelTest {
+   @get:Rule
+    val rule = InstantTaskExecutorRule()
+   
     private lateinit var viewModel: UserViewModel
     private lateinit var mockRepo: UserRepository
 
@@ -34,8 +37,20 @@ Mockito kullanarak birim testleri yazmak için aşağıdaki adımları izleyebil
     }
 
     @Test
+    fun test_UserList_Only_1_User() {
+        Mockito.`when`(repo.getUsers())
+            .thenReturn(listOf(User("user1")))
+
+        viewModel.getList()
+
+        assert(viewModel.listLive.value?.size == 1)
+    }
+   
+
+    @Test
     fun testUserLoginSuccess() {
         // Test senaryosunu burada yazın
     }
+   
    }
 
